@@ -1,75 +1,37 @@
-import pandas as pd
-import joblib
-import os
-from pathlib import Path
 import streamlit as st
-
-st.write("Current working directory:")
-st.write(os.getcwd())
-
-st.write("Files in current directory:")
-st.write(os.listdir("."))
-
-st.write("Files in app folder:")
-st.write(os.listdir(os.path.dirname(__file__)))
-
-BASE_DIR = Path(__file__).resolve().parent
-
+from pathlib import Path
+import category_encoders as ce
+from sklearn.preprocessing import MinMaxScaler
 st.title("House Rent Prediction")
+import joblib
+import pandas as pd
+BASE_DIR = Path(__file__).resolve().parent
+model = joblib.load(BASE_DIR /"house_rent_prediction.pkl")
 
-BHK = st.number_input("Enter BHK", min_value=1, max_value=10, step=1)
-
-Size = st.number_input(
-    "Enter Size in sq ft",
-    min_value=100,
-    max_value=10000,
-    step=10
-)
-
-Area_Type = st.selectbox(
-    "Select Area Type",
-    ["Super Area", "Carpet Area", "Built Area"]
-)
-
-City = st.selectbox(
-    "Select City",
-    ["Delhi", "Mumbai", "Bangalore", "Hyderabad", "Chennai", "Kolkata"]
-)
-
-Furnishing_Status = st.selectbox(
-    "Select Furnishing Status",
-    ["Unfurnished", "Semi-Furnished", "Furnished"]
-)
-
-tenant_preferred = st.selectbox(
-    "Select Tenant Preferred",
-    ["Family", "Bachelors", "Any"]
-)
-
-Bathroom = st.number_input(
-    "Enter number of Bathrooms",
-    min_value=1,
-    max_value=10,
-    step=1
-)
-
-Point_of_Contact = st.selectbox(
-    "Select Point of Contact",
-    ["Contact Owner", "Contact Agent", "Contact Builder"]
-)
-
-input_data = pd.DataFrame({
-    "BHK": [BHK],
-    "Size": [Size],
-    "Area Type": [Area_Type],
-    "City": [City],
-    "Furnishing Status": [Furnishing_Status],
-    "Tenant Preferred": [tenant_preferred],
-    "Bathroom": [Bathroom],
-    "Point of Contact": [Point_of_Contact]
+BHK = st.number_input("Enter the number of BHK:", min_value=1, max_value=10, step=1)
+Size = st.number_input("Enter the size of the house in square feet:", min_value=100, max_value=10000, step=10)
+Area_Type = st.selectbox("Select the area type:", ["Super Area", "Carpet Area", "Built Area"])
+City = st.selectbox("Select the city:", ["Delhi", "Mumbai", "Bangalore", "Chennai", "Kolkata"])
+Furnishing_Status = st.selectbox("Select the furnishing status:", ["Furnished", "Semi-Furnished", "Unfurnished"])
+Tenant_Preferred = st.selectbox("Select the tenant preferred:", ["Family", "Bachelors", "Any"])
+Bathroom = st.number_input("Enter the number of bathrooms:", min_value=1, max_value=10, step=1)
+Point_of_Contact = st.selectbox("Select the point of contact:", ["Contact Owner", "Contact Agent", "Contact Builder"])
+input=pd.DataFrame({
+    'BHK':[BHK],
+     'Size': [Size], 
+     'Area Type': [Area_Type], 
+     'City': [City], 
+     'Furnishing Status': [Furnishing_Status],
+     'Tenant Preferred': [Tenant_Preferred],
+        'Bathroom': [Bathroom],
+        'Point of Contact': [Point_of_Contact]
 })
+e=model["encoder"]
+s=model["scaler"]
+m=model["model"]
+new_encoded = e.transform(input)
+new_scaled = s.transform(new_encoded)
 
 if st.button("Predict Rent"):
-    model = joblib.load(BASE_DIR / "house_rent_prediction.pkl")
-    prediction = model.predict(input_data)
-    st.write(f"Predicted Rent: {prediction[0]:,.0f}")
+    prediction = m.predict(new_scaled)
+    st.write(f"The predicted rent is: {prediction[0]}")
