@@ -10,6 +10,8 @@ st.write(os.listdir("."))
 st.write("Files in app folder:")
 st.write(os.listdir(os.path.dirname(__file__)))
 
+BASE_DIR = Path(__file__).resolve().parent
+
 import streamlit as st
 st.title("House Rent Prediction")
 import joblib
@@ -35,6 +37,12 @@ input_data = pd.DataFrame({
     "Point of Contact": [Point_of_Contact]
 })
 if st.button("Predict Rent"):
-    model = joblib.load("house_rent_prediction.pkl")
+    model = joblib.load(BASE_DIR / "house_rent_prediction.pkl")
     prediction = model.predict(input_data)
     st.write(f"Predicted Rent: {prediction[0]:,.0f}")
+    from pathlib import Path
+
+
+BASE_DIR = Path(__file__).resolve().parent
+
+
