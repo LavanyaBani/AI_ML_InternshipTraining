@@ -1,3 +1,15 @@
+import os
+import streamlit as st
+
+st.write("Current working directory:")
+st.write(os.getcwd())
+
+st.write("Files in current directory:")
+st.write(os.listdir("."))
+
+st.write("Files in app folder:")
+st.write(os.listdir(os.path.dirname(__file__)))
+
 import streamlit as st
 st.title("House Rent Prediction")
 import joblib
