@@ -1,2 +1,6 @@
 tensorflow
 scikit-learn
+streamlit
+joblib
+pandas
+numpy
