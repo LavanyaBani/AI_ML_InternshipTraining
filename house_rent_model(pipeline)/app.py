@@ -2,7 +2,7 @@ import streamlit as st
 st.title("House Rent Prediction")
 import joblib
 import pandas as pd
-model = joblib.load("house_rent_prediction.pkl")
+
 
 BHK = st.number_input("Enter BHK", min_value=1, max_value=10, step=1)
 Size = st.number_input("Enter Size in sq ft", min_value=100, max_value=10000, step=10)
@@ -23,5 +23,6 @@ input_data = pd.DataFrame({
     "Point of Contact": [Point_of_Contact]
 })
 if st.button("Predict Rent"):
+    model = joblib.load("house_rent_prediction.pkl")
     prediction = model.predict(input_data)
     st.write(f"Predicted Rent: {prediction[0]:,.0f}")
