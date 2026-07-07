@@ -1,4 +1,7 @@
+import pandas as pd
+import joblib
 import os
+from pathlib import Path
 import streamlit as st
 
 st.write("Current working directory:")
@@ -12,20 +15,49 @@ st.write(os.listdir(os.path.dirname(__file__)))
 
 BASE_DIR = Path(__file__).resolve().parent
 
-import streamlit as st
 st.title("House Rent Prediction")
-import joblib
-import pandas as pd
-
 
 BHK = st.number_input("Enter BHK", min_value=1, max_value=10, step=1)
-Size = st.number_input("Enter Size in sq ft", min_value=100, max_value=10000, step=10)
-Area_Type = st.selectbox("Select Area Type", ["Super Area", "Carpet Area", "Built Area"])
-City = st.selectbox("Select City", ["Delhi", "Mumbai", "Bangalore", "Hyderabad", "Chennai", "Kolkata"])
-Furnishing_Status = st.selectbox("Select Furnishing Status", ["Unfurnished",    "Semi-Furnished", "Furnished"])    
-tenant_preferred = st.selectbox("Select Tenant Preferred", ["Family", "Bachelors", "Any"])
-Bathroom = st.number_input("Enter number of Bathrooms", min_value=1, max_value=10, step=1)
-Point_of_Contact = st.selectbox("Select Point of Contact", ["Contact Owner", "Contact Agent", "Contact Builder"])   
+
+Size = st.number_input(
+    "Enter Size in sq ft",
+    min_value=100,
+    max_value=10000,
+    step=10
+)
+
+Area_Type = st.selectbox(
+    "Select Area Type",
+    ["Super Area", "Carpet Area", "Built Area"]
+)
+
+City = st.selectbox(
+    "Select City",
+    ["Delhi", "Mumbai", "Bangalore", "Hyderabad", "Chennai", "Kolkata"]
+)
+
+Furnishing_Status = st.selectbox(
+    "Select Furnishing Status",
+    ["Unfurnished", "Semi-Furnished", "Furnished"]
+)
+
+tenant_preferred = st.selectbox(
+    "Select Tenant Preferred",
+    ["Family", "Bachelors", "Any"]
+)
+
+Bathroom = st.number_input(
+    "Enter number of Bathrooms",
+    min_value=1,
+    max_value=10,
+    step=1
+)
+
+Point_of_Contact = st.selectbox(
+    "Select Point of Contact",
+    ["Contact Owner", "Contact Agent", "Contact Builder"]
+)
+
 input_data = pd.DataFrame({
     "BHK": [BHK],
     "Size": [Size],
@@ -36,13 +68,8 @@ input_data = pd.DataFrame({
     "Bathroom": [Bathroom],
     "Point of Contact": [Point_of_Contact]
 })
+
 if st.button("Predict Rent"):
     model = joblib.load(BASE_DIR / "house_rent_prediction.pkl")
     prediction = model.predict(input_data)
     st.write(f"Predicted Rent: {prediction[0]:,.0f}")
-    from pathlib import Path
-
-
-BASE_DIR = Path(__file__).resolve().parent
-
-
