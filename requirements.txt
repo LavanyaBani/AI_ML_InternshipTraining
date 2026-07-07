@@ -4,3 +4,4 @@ streamlit
 joblib
 pandas
 numpy
+category-encoders
