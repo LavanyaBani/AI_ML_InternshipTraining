@@ -1,4 +1,5 @@
 import streamlit as st
+from pathlib import Path
 BASE_DIR = Path(__file__).resolve().parent
 model = joblib.load(BASE_DIR /"bp_model.pkl")
 st.title("BP Prediction")
